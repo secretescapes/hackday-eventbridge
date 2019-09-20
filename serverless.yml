@@ -19,3 +19,7 @@ functions:
       - http:
           path: event/push
           method: post
+  consumera:
+    handler: handler.consumerA
+  consumerb:
+    handler: handler.consumerB

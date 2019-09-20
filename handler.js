@@ -34,3 +34,11 @@ module.exports.push = async event => {
     return { statusCode: 400, body: err };
   }
 };
+
+module.exports.consumerA = async event => {
+  console.log(JSON.stringify(event));
+};
+
+module.exports.consumerB = async event => {
+  console.log(JSON.stringify(event));
+};
