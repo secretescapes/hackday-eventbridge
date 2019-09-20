@@ -1,0 +1,12 @@
+service: hackday-eventbridge
+# app and org for use with dashboard.serverless.com
+app: hackday-eventbridge
+org: mariomartinez
+provider:
+  profile: release-bot
+  name: aws
+  runtime: nodejs10.x
+
+functions:
+  hello:
+    handler: handler.hello
