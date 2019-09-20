@@ -1,18 +1,36 @@
-'use strict';
+"use strict";
+const AWS = require("aws-sdk");
 
-module.exports.hello = async event => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+module.exports.push = async event => {
+  console.log(JSON.stringify(event));
+  try {
+    const eventPayload = JSON.parse(event.body).event;
+    if (!eventPayload) {
+      console.error("Missing event in payload");
+      throw new Error("Missing event in payload");
+    }
+    const eventbridge = new AWS.EventBridge();
+    var params = {
+      Entries: [
+        /* required */
+        {
+          Detail: JSON.stringify(eventPayload.payload),
+          DetailType: eventPayload.type,
+          // EventBusName: "STRING_VALUE",
+          Resources: [],
+          Source: "AWS_LAMBDA"
+        }
+        /* more items */
+      ]
+    };
+    const result = await eventbridge.putEvents(params).promise();
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+    return {
+      statusCode: 200,
+      body: JSON.stringify(result)
+    };
+  } catch (err) {
+    console.error(err);
+    return { statusCode: 400, body: err };
+  }
 };

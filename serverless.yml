@@ -6,7 +6,16 @@ provider:
   profile: release-bot
   name: aws
   runtime: nodejs10.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "events:PutEvents"
+      Resource: "*"
 
 functions:
-  hello:
-    handler: handler.hello
+  push:
+    handler: handler.push
+    events:
+      - http:
+          path: event/push
+          method: post
